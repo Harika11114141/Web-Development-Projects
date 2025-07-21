@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destination Paradise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8fafc;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #3b82f6;
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 12px 16px;
+            color: #334155;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f5f9;
+            color: #3b82f6;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            border-radius: 25px;
+            padding: 8px 16px;
+            width: 250px;
+        }
+
+        .search-input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+        }
+
+        .mobile-nav.active {
+            display: block;
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 40px auto;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .slide-content h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .slide-content p {
+            font-size: 20px;
+            max-width: 600px;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 15px 20px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .carousel-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .previous-slide {
+            left: 20px;
+        }
+
+        .next-slide {
+            right: 20px;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .indicator.active {
+            background: white;
+        }
+
+        /* Packages Section */
+        .packages-section {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            color: #1e293b;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .package {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .package:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-container {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .package:hover .image-container img {
+            transform: scale(1.05);
+        }
+
+        .package-content {
+            padding: 25px;
+        }
+
+        .package-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+
+        .package-description {
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .book-now-btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: opacity 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .book-now-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Booking Form */
+        .booking-section {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            padding: 80px 20px;
+        }
+
+        .booking-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 30px;
+            color: #1e293b;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .form-select {
+            background: white;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            font-size: 16px;
+            transition: opacity 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* About Section */
+        .about-section {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-content h2 {
+            font-size: 42px;
+            margin-bottom: 30px;
+            color: #1e293b;
+        }
+
+        .about-content p {
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #3b82f6;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 40px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .search-container {
+                width: 200px;
+            }
+
+            .carousel-container {
+                height: 300px;
+                margin: 20px;
+            }
+
+            .slide-content h2 {
+                font-size: 32px;
+            }
+
+            .slide-content p {
+                font-size: 16px;
+            }
+
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .about-content h2 {
+                font-size: 32px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+        }
+
+        .no-results {
+            text-align: center;
+            color: #64748b;
+            font-size: 18px;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Destination Paradise</div>
+            
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li class="dropdown">
+                    <a href="#destinations">Destinations ▼</a>
+                    <div class="dropdown-content">
+                        <a href="#beach">Beach Getaway</a>
+                        <a href="#mountain">Mountain Adventure</a>
+                        <a href="#city">City Life Experience</a>
+                        <a href="#more">More</a>
+                    </div>
+                </li>
+                <li><a href="#about" onclick="scrollToAbout()">About</a></li>
+            </ul>
+
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search packages..." id="searchInput">
+            </div>
+
+            <div class="mobile-menu" onclick="toggleMobileMenu()">☰</div>
+        </div>
+
+        <div class="mobile-nav" id="mobileNav">
+            <div style="margin-bottom: 20px;">
+                <input type="text" class="search-input" placeholder="Search packages..." style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+            </div>
+            <a href="#home" style="display: block; padding: 10px 0; color: #334155; text-decoration: none;">Home</a>
+            <a href="#destinations" style="display: block; padding: 10px 0; color: #334155; text-decoration: none;">Destinations</a>
+            <a href="#about" onclick="scrollToAbout()" style="display: block; padding: 10px 0; color: #334155; text-decoration: none;">About</a>
+        </div>
+    </nav>
+
+    <!-- Carousel -->
+    <section id="home">
+        <div class="carousel-container">
+            <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1200&h=600&fit=crop')">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Discover Paradise Beaches</h2>
+                        <p>Experience crystal clear waters and pristine sandy beaches around the world.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1472396961693-142e6e269027?w=1200&h=600&fit=crop')">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Mountain Adventures Await</h2>
+                        <p>Explore majestic peaks and breathtaking mountain landscapes.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=1200&h=600&fit=crop')">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Cultural Experiences</h2>
+                        <p>Immerse yourself in local cultures and traditions worldwide.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?w=1200&h=600&fit=crop')">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Nature's Wonders</h2>
+                        <p>Discover untouched natural beauty and wildlife adventures.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=600&fit=crop')">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>Urban Explorations</h2>
+                        <p>Experience vibrant city life and modern attractions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-nav previous-slide" onclick="previousSlide()">‹</button>
+            <button class="carousel-nav next-slide" onclick="nextSlide()">›</button>
+
+            <div class="carousel-indicators">
+                <span class="indicator active" onclick="currentSlide(1)"></span>
+                <span class="indicator" onclick="currentSlide(2)"></span>
+                <span class="indicator" onclick="currentSlide(3)"></span>
+                <span class="indicator" onclick="currentSlide(4)"></span>
+                <span class="indicator" onclick="currentSlide(5)"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section class="packages-section" id="destinations">
+        <h2 class="section-title">Our Travel Packages</h2>
+        <div class="no-results" id="noResults" style="display: none;">
+            No packages found matching your search.
+        </div>
+        <div class="packages-grid" id="packagesContainer">
+            <!-- Packages will be inserted here by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Booking Form -->
+    <section class="booking-section">
+        <div class="booking-form">
+            <h2 class="form-title">Book Your Adventure</h2>
+            <div id="bookingForm">
+                <form id="bookingFormElement">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="countryCode">Country Code *</label>
+                            <select id="countryCode" class="form-select" required>
+                                <option value="">Select Country</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="number" id="phone" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birthday">Date of Birth *</label>
+                        <input type="date" id="birthday" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maritalStatus">Marital Status *</label>
+                        <select id="maritalStatus" class="form-select" required>
+                            <option value="">Select Status</option>
+                            <option value="single">Single</option>
+                            <option value="married">Married</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="about-grid">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&h=400&fit=crop" alt="Travel Agency">
+            </div>
+            
+            <div class="about-content">
+                <h2>About Destination Paradise</h2>
+                <p>Welcome to Destination Paradise, your trusted partner in creating unforgettable travel experiences. With over a decade of expertise in the travel industry, we specialize in crafting personalized journeys that go beyond ordinary tourism.</p>
+                <p>Our team of dedicated travel experts has explored every corner of the globe to bring you carefully curated packages that combine adventure, comfort, and cultural immersion. From pristine beaches to majestic mountains, from bustling cities to serene countryside, we make your dream destinations accessible.</p>
+                <p>At Destination Paradise, we believe that travel is not just about visiting places—it's about creating memories that last a lifetime. Our commitment to excellence, attention to detail, and passion for exploration ensures that every journey with us is extraordinary.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">10+</div>
+                        <div class="stat-label">Years of Experience</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50k+</div>
+                        <div class="stat-label">Happy Travelers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">Destinations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Customer Support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 Destination Paradise. All rights reserved. Your journey to paradise starts here.</p>
+    </footer>
+
+    <script>
+        // Packages Array
+        const packages = [
+            {
+                name: "Beach Getaway",
+                photo: "https://cdn.pixabay.com/photo/2016/11/23/13/48/beach-1852945_640.jpg",
+                description: "Enjoy a relaxing time at the sunny beaches of Bali. Inclusive of hotel stay and guided tours."
+            },
+            {
+                name: "Mountain Adventure",
+                photo: "https://cdn.pixabay.com/photo/2016/11/14/03/26/cliff-1822484_640.jpg",
+                description: "Explore the thrilling trails of the Himalayas. Package includes hiking, camping, and meals."
+            },
+            {
+                name: "City Life Experience",
+                photo: "https://cdn.pixabay.com/photo/2017/03/29/15/18/tianjin-2185510_1280.jpg",
+                description: "Discover the vibrant life of New York City. Comes with city tours and museum passes."
+            }
+        ];
+
+        // Country Codes Array
+        const countryCodes = [
+            { code: "+1", name: "USA" },
+            { code: "+1", name: "Canada" },
+            { code: "+52", name: "Mexico" },
+            { code: "+852", name: "Hong Kong" },
+            { code: "+44", name: "UK" },
+            { code: "+33", name: "France" },
+            { code: "+49", name: "Germany" },
+            { code: "+66", name: "Thailand" },
+            { code: "+84", name: "Vietnam" },
+            { code: "+91", name: "India" },
+            { code: "+27", name: "South Africa" },
+            { code: "+61", name: "Australia" },
+            { code: "+64", name: "New Zealand" },
+            { code: "+971", name: "UAE" },
+            { code: "+81", name: "Japan" },
+            { code: "+82", name: "South Korea" },
+            { code: "+39", name: "Italy" },
+            { code: "+30", name: "Greece" },
+            { code: "+90", name: "Turkey" },
+            { code: "+55", name: "Brazil" },
+            { code: "+54", name: "Argentina" },
+            { code: "+56", name: "Chile" }
+        ];
+
+        // Carousel Variables
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator');
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPackages();
+            populateCountryCodes();
+            startCarousel();
+            setupEventListeners();
+        });
+
+        // Carousel Functions
+        function startCarousel() {
+            setInterval(function() {
+                nextSlide();
+            }, 3000);
+        }
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            indicators.forEach(indicator => indicator.classList.remove('active'));
+            
+            slides[index].classList.add('active');
+            indicators[index].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            showSlide(currentSlideIndex);
+        }
+
+        function previousSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+            showSlide(currentSlideIndex);
+        }
+
+        function currentSlide(index) {
+            currentSlideIndex = index - 1;
+            showSlide(currentSlideIndex);
+        }
+
+        // Package Rendering
+        function renderPackages(filteredPackages = packages) {
+            const container = document.getElementById('packagesContainer');
+            const noResults = document.getElementById('noResults');
+            
+            if (filteredPackages.length === 0) {
+                container.innerHTML = '';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            container.innerHTML = '';
+
+            filteredPackages.forEach(pkg => {
+                const packageElement = document.createElement('div');
+                packageElement.className = 'package';
+                packageElement.innerHTML = `
+                    <div class="image-container">
+                        <img src="${pkg.photo}" alt="${pkg.name}">
+                    </div>
+                    <div class="package-content">
+                        <h3 class="package-name">${pkg.name}</h3>
+                        <p class="package-description">${pkg.description}</p>
+                        <button class="book-now-btn">Book Now</button>
+                    </div>
+                `;
+                container.appendChild(packageElement);
+            });
+        }
+
+        // Search Functionality
+        function setupEventListeners() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredPackages = packages.filter(pkg => 
+                    pkg.name.toLowerCase().includes(searchTerm) || 
+                    pkg.description.toLowerCase().includes(searchTerm)
+                );
+                renderPackages(filteredPackages);
+            });
+
+            // Form Submission
+            const form = document.getElementById('bookingFormElement');
+            form.addEventListener('submit', handleFormSubmit);
+        }
+
+        // Populate Country Codes
+        function populateCountryCodes() {
+            const select = document.getElementById('countryCode');
+            countryCodes.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country.code;
+                option.textContent = `${country.code} (${country.name})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Form Validation and Submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const phone = document.getElementById('phone').value;
+            const birthday = document.getElementById('birthday').value;
+            
+            // Validate phone number (10 digits)
+            if (phone.length !== 10) {
+                alert("Please enter a valid 10-digit phone number.");
+                return;
+            }
+            
+            // Validate age (at least 18)
+            const age = calculateAge(birthday);
+            if (age < 18) {
+                alert("You must be at least 18 years old.");
+                return;
+            }
+            
+            // Success message
+            alert("Thanks for your interest, our tour experts will get back to you shortly!");
+            
+            // Reset form
+            document.getElementById('bookingFormElement').reset();
+        }
+
+        function calculateAge(birthday) {
+            const today = new Date();
+            const birthDate = new Date(birthday);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.toggle('active');
+        }
+
+        // Smooth Scroll to About
+        function scrollToAbout() {
+            document.getElementById('about').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+    </script>
+</body>
+</html>
